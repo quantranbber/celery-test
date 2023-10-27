@@ -14,7 +14,7 @@ class User(models.Model):
 
 class LogData(models.Model):
     id = models.AutoField(primary_key=True)
-    time = models.DateTimeField(auto_now_add=True)
+    time = models.DateTimeField(auto_now_add=True, blank=True)
     store_id = models.IntegerField()
     user_id = models.IntegerField()
     content = models.CharField(max_length=255)

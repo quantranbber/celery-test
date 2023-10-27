@@ -1,10 +1,9 @@
 from django.http import JsonResponse
-
 from rest_framework import status
 from rest_framework.generics import ListCreateAPIView
-from store.register_task import app
-
-from store.serializers import *
+from store.celery_app import app
+from store.serializers import StoreSerializer, UserSerializer
+from store.models import Store, User
 
 
 class ListCreateStoreView(ListCreateAPIView):
@@ -40,8 +39,8 @@ class ListCreateUserView(ListCreateAPIView):
         serializer = UserSerializer(data=request.data)
 
         if serializer.is_valid():
-            serializer.save()
-            app.send_task('register')
+            user = serializer.save()
+            app.send_task('register', args=(request.data.get('store_id'), user.id))
 
             return JsonResponse({
                 'message': 'register successful!'

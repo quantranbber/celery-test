@@ -1,0 +1,1 @@
+python -m celery -A store worker --loglevel=INFO -P solo

@@ -120,7 +120,16 @@ LOGGING = {
             'class': 'logging.StreamHandler',
         }
     },
+    "root": {
+        "handlers": ["console"],
+        "level": "INFO",
+    },
     'loggers': {
+        "django": {
+            "handlers": ["console"],
+            "level": os.getenv("DJANGO_LOG_LEVEL", "INFO"),
+            "propagate": False,
+        },
         'django.db.backends': {
             'level': 'DEBUG',
             'handlers': ['console'],
@@ -151,12 +160,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CELERY_accept_content = ['application/json']
 CELERY_task_serializer = 'json'
-CELERY_TASK_DEFAULT_QUEUE = 'store-queue'
-CELERY_BROKER_URL = "sqs://@"
-CELERY_BROKER_TRANSPORT_OPTIONS = {
-    "region": "ap-southeast-1",
-    'queue_name_prefix': 'django-',
-    'visibility_timeout': 7200,
-    'polling_interval': 1
-}
+CELERY_BROKER_URL = "redis://localhost:6379"
+
+# SQS settings
+# CELERY_TASK_DEFAULT_QUEUE = 'store-queue'
+# CELERY_BROKER_TRANSPORT_OPTIONS = {
+#     "region": "ap-southeast-1",
+#     'queue_name_prefix': 'django-',
+#     'visibility_timeout': 7200,
+#     'polling_interval': 1
+# }
 CELERY_result_backend = None
